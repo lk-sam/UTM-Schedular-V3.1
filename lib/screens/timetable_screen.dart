@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:utmschedular/components/custom_appBar.dart';
 import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:utmschedular/constants/routes.dart';
-
+import 'package:utmschedular/widgets/course_container.dart';
+import 'package:utmschedular/screens/testing_data.dart';
 
 class TimetablePage extends StatefulWidget {
   const TimetablePage({super.key});
@@ -25,12 +26,7 @@ class _TimetablePageState extends State<TimetablePage> {
         ),
         drawer: CustomDrawer(),
         body: Center(
-          child: ElevatedButton(
-            onPressed: () {
-               Navigator.pushNamed(context, editCourseRoute);
-               }, 
-            child: Text('Edit Course'),
-        ),
+          child:CourseContainer(courses: courses)
     ),
     );
   }

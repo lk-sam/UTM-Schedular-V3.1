@@ -5,7 +5,7 @@ import 'package:utmschedular/screens/edit_course_page.dart';
 import 'package:utmschedular/screens/home_screen.dart';
 import 'package:utmschedular/screens/task_screen.dart';
 import 'package:utmschedular/screens/timetable_screen.dart';
-
+import 'package:utmschedular/screens/testing_course_page.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         timetableRoute: (context) => const TimetablePage(),
         taskRoute: (context) => const TaskOverviewPage(),
         editCourseRoute: (context) => EditCoursePage(),
+        courseListRoute: (context) => CourseScreen(),
       },
     );
   }

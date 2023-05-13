@@ -29,6 +29,13 @@ class CustomDrawer extends StatelessWidget {
                   Navigator.pushNamed(context, timetableRoute);
                 },
               ),
+              ListTile(
+                title: Text('My Courses'),
+                 onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, courseListRoute);
+                },
+              ),
             ],
           ),
         );

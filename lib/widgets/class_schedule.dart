@@ -6,7 +6,7 @@ class ClassSchedule extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
+        const Padding(
           padding: EdgeInsets.all(8.0),
           child: Row(
             children: [
@@ -26,7 +26,7 @@ class ClassSchedule extends StatelessWidget {
          Card(
                   elevation: 4,
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -36,23 +36,23 @@ class ClassSchedule extends StatelessWidget {
                             border: OutlineInputBorder(),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           children: [
                             Expanded(
                               flex: 5,
                               child: TextFormField(
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Time Start',
                                   border: OutlineInputBorder(),
                                 ),
                               ),
                             ),
-                            SizedBox(width: 16),
+                            const SizedBox(width: 16),
                             Expanded(
                               flex: 5,
                               child: TextFormField(
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   labelText: 'Time End',
                                   border: OutlineInputBorder(),
                                 ),
@@ -60,14 +60,14 @@ class ClassSchedule extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         TextFormField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Venue',
                             border: OutlineInputBorder(),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -76,11 +76,11 @@ class ClassSchedule extends StatelessWidget {
                                 // Add functionality for deleting the class schedule
                                 print('Delete class schedule button pressed');
                               },
-                              icon: Icon(Icons.delete),
-                              label: Text('Delete'),
+                              icon: const Icon(Icons.delete),
+                              label: const Text('Delete'),
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: Colors.red, 
-                                side: BorderSide(
+                                side: const BorderSide(
                                     color: Colors.red,
                                     width: 1.0), // Set the border color to red
                               ),
