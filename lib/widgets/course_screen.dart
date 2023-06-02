@@ -4,22 +4,24 @@ import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:utmschedular/models/domain/class.dart';
 import 'package:utmschedular/models/domain/course.dart';
 
-class ClassScreen extends StatelessWidget {
-  final Course course;
+import '../models/domain/timetable.dart';
 
-  ClassScreen({Key? key, required this.course}) : super(key: key);
+class CourseScreen extends StatelessWidget {
+  final Timetable timetable;
+
+  CourseScreen({Key? key, required this.timetable}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
             Icon(Icons.book),
             SizedBox(width: 16),
             Text(
-              'Course Catalog',
+              'Timetable Info',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -36,7 +38,7 @@ class ClassScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  course.name ?? 'Unknown',
+                  timetable.id ?? 'Unknown',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -48,7 +50,7 @@ class ClassScreen extends StatelessWidget {
                     Expanded(
                       flex: 7,
                       child: Text(
-                        course.code,
+                        timetable.title,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -59,7 +61,7 @@ class ClassScreen extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: Text(
-                        "${course.section}",
+                        timetable.description,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -69,15 +71,7 @@ class ClassScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
-                Text(
-                  course.lecturer,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                course.schedule.isEmpty
+                timetable.courses.isEmpty
                     ? const Text(
                         'No classes scheduled for this course',
                         style: TextStyle(
@@ -86,9 +80,9 @@ class ClassScreen extends StatelessWidget {
                         ),
                       )
                     : Column(
-                        children: course.schedule
-                            .map((Class schedule) => Text(
-                                  '${schedule.day} ${schedule.timeStart} - ${schedule.timeEnd}',
+                        children: timetable.courses
+                            .map((Course course) => Text(
+                                  course.name,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
