@@ -7,14 +7,14 @@ import 'package:utmschedular/models/domain/course.dart';
 class ClassScreen extends StatelessWidget {
   final Course course;
 
-   ClassScreen({Key? key, required this.course}) :super(key: key);
+  ClassScreen({Key? key, required this.course}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           children: [
             Icon(Icons.book),
             SizedBox(width: 16),
@@ -30,7 +30,7 @@ class ClassScreen extends StatelessWidget {
         const SizedBox(height: 16),
         Card(
           elevation: 4,
-          child: Padding( 
+          child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,8 +47,7 @@ class ClassScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 7,
-                      child: 
-                      Text(
+                      child: Text(
                         course.code,
                         style: const TextStyle(
                           fontSize: 16,
@@ -59,8 +58,7 @@ class ClassScreen extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       flex: 3,
-                      child:
-                      Text(
+                      child: Text(
                         "${course.section}",
                         style: const TextStyle(
                           fontSize: 16,
@@ -79,28 +77,28 @@ class ClassScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-                course.schedule.isEmpty ?
-                const Text(
-                  'No classes scheduled for this course',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ) :
-                Column(
-                  children: course.schedule.map((Class schedule) => 
-                      Text(
-                        '${schedule.day} ${schedule.timeStart} - ${schedule.timeEnd}',
-                        style: const TextStyle(
+                course.schedule.isEmpty
+                    ? const Text(
+                        'No classes scheduled for this course',
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       )
-                      ).toList(),
-                  ),
+                    : Column(
+                        children: course.schedule
+                            .map((Class schedule) => Text(
+                                  '${schedule.day} ${schedule.timeStart} - ${schedule.timeEnd}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ))
+                            .toList(),
+                      ),
               ],
             ),
-            ),
+          ),
         ),
       ],
     );

@@ -6,7 +6,7 @@ class CourseCatalog extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+         Row(
           children: [
             Icon(Icons.book),
             SizedBox(width: 8),

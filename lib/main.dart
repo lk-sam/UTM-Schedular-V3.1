@@ -6,6 +6,8 @@ import 'package:utmschedular/screens/home_screen.dart';
 import 'package:utmschedular/screens/task_screen.dart';
 import 'package:utmschedular/screens/timetable_screen.dart';
 import 'package:utmschedular/screens/testing_course_page.dart';
+import 'package:utmschedular/screens/login_page.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xFF81163F),
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
       routes: {
         calendarRoute: (context) => const CalendarPage(),
         timetableRoute: (context) => const TimetablePage(),
@@ -78,7 +80,7 @@ class MyBlankApp extends StatelessWidget {
               ),
               ListTile(
                 title: Text('My Timetables'),
-                 onTap: () {
+                onTap: () {
                   print('Drawer My Timetable tapped');
                 },
               ),
