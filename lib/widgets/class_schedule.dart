@@ -6,7 +6,7 @@ class ClassSchedule extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+         Padding(
           padding: EdgeInsets.all(8.0),
           child: Row(
             children: [

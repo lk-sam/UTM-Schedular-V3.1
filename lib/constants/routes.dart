@@ -4,3 +4,5 @@ const timetableRoute = '/timetable';
 const taskRoute = '/task';
 const editCourseRoute = '/edit-course';
 const courseListRoute = '/course-list';
+const loginRoute = '/login';
+const registerRoute = '/register';
