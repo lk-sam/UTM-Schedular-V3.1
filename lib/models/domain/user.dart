@@ -11,4 +11,4 @@ class User {
     required this.isSubscribed,
     this.subscriptionDueDate,
   });
-}
+}  
