@@ -75,4 +75,19 @@ class ApiService {
       throw Exception('Unexpected error occured!');
     }
   }
+
+  static Future<String> fetchName(String matricNo, String ic) async {
+    final response = await http
+        .get(Uri.parse("http://web.fc.utm.my/ttms/web_man_webservice_json.cgi"
+            "?entity=authentication"
+            "&login=${matricNo}"
+            "&password=${ic}"));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse[0]['full_name'];
+    } else {
+      throw Exception('Unexpected error occured!');
+    }
+  }
 }

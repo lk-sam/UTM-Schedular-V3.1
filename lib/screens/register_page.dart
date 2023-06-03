@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:utmschedular/models/DTO/userDTO.dart';
@@ -16,8 +17,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   late Future<String> JsonMatric = Future.value();
+  late Future<String> JsonName = Future.value();
   String matricNo = ''; // Get matric no. from user
-  String name = ''; // Get name from user
   String IC = ''; // Get IC from user
   String password = ''; // Get password from user
   String confirmedPassword = ''; // Get confirmed password from user
@@ -27,12 +28,21 @@ class _RegisterPageState extends State<RegisterPage> {
   var passwordController = new TextEditingController();
   var confirmedPasswordController = new TextEditingController();
 
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('User');
+
   @override
   void initState() {
     super.initState();
   }
 
-  // Fetch student info based on the provided matric number and ic number
+  //Fetch student name based on the provided matric number and ic number
+  Future<String> getStudentName(String matricNo, String ic) async {
+    String name = await ApiService.fetchName(matricNo, ic);
+    return name;
+  }
+
+  // Fetch student matric no. based on the provided matric number and ic number
   Future<String> getStudentInfo(String matricNo, String ic) async {
     String matric = await ApiService.fetchMatricNo(matricNo, ic);
     return matric;
@@ -59,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Container(
                   child: Container(
                       margin: new EdgeInsets.symmetric(
-                          vertical: 20.0, horizontal: 20.0),
+                          vertical: 60.0, horizontal: 20.0),
                       //Login Box
                       child: Align(
                           alignment: Alignment.center,
@@ -105,42 +115,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                                       )))
                                             ])),
                                     Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 20, 10, 10),
-                                        //Username
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: const [
-                                              Text('Name',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    height: 1.2125,
-                                                    color: Color(0xff000000),
-                                                  ))
-                                            ])),
-                                    Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                        //Username
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextField(
-                                                controller: nameController,
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                ),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    name = value;
-                                                  });
-                                                },
-                                              )
-                                            ])),
-                                    Container(
                                         padding: EdgeInsets.all(10),
                                         //Username
                                         child: Row(
@@ -182,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: const [
-                                              Text('IC',
+                                              Text('IC No.',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w500,
@@ -306,11 +280,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                             setState(() {
                                               JsonMatric =
                                                   getStudentInfo(matricNo, IC);
+                                              JsonName =
+                                                  getStudentName(matricNo, IC);
                                             });
                                             String StringJsonMatric =
                                                 await JsonMatric;
-                                            print(StringJsonMatric);
-                                            print(matricNo);
+                                            String StringJsonName =
+                                                await JsonName;
+                                            print(StringJsonName);
                                             // FutureBuilder<String>(
                                             //   future: JsonMatric,
                                             //   builder: (context, snapshot) {
@@ -347,8 +324,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             // );
 
                                             // Checking all TextFields.
-                                            if (name == '' ||
-                                                matricNo == '' ||
+                                            if (matricNo == '' ||
                                                 IC == '' ||
                                                 password == '' ||
                                                 confirmedPassword == '') {
@@ -384,6 +360,61 @@ class _RegisterPageState extends State<RegisterPage> {
                                                   await JsonMatric)) {
                                                 if (password ==
                                                     confirmedPassword) {
+                                                  final String? matric =
+                                                      matricController.text;
+                                                  final String? password =
+                                                      passwordController.text;
+                                                  await users.add({
+                                                    "fullname": StringJsonName,
+                                                    "matric no": matric,
+                                                    "password": password
+                                                  });
+
+                                                  //clear the test fields
+                                                  nameController.text = '';
+                                                  matricController.text = '';
+                                                  passwordController.text = '';
+
+                                                  // add a message to notify the user
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      duration: const Duration(
+                                                          seconds: 1,
+                                                          milliseconds: 500),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      elevation: 0,
+                                                      content: Container(
+                                                          padding: const EdgeInsets
+                                                                  .fromLTRB(
+                                                              16, 30, 16, 30),
+                                                          decoration: const BoxDecoration(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      16,
+                                                                      255,
+                                                                      206,
+                                                                      218),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10))),
+                                                          child: const Center(
+                                                              child: Text(
+                                                            "Please login using the correct registered information...",
+                                                            style: TextStyle(
+                                                              fontSize: 15,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ))),
+                                                    ),
+                                                  );
+
+                                                  //navigate to login page if register successfully
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -431,9 +462,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                                   ),
                                                 );
                                               }
-                                              // Put your code here, which you want to execute when Text Field is NOT Empty.
-                                              print(
-                                                  'Not Empty, All Text Input is Filled.');
                                             }
                                           },
                                           child: const Text('Register'),
@@ -457,6 +485,4 @@ class _RegisterPageState extends State<RegisterPage> {
       )
     ]);
   }
-
-  void insertData(String name, String matric, String password) {}
 }
