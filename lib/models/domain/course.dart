@@ -7,7 +7,7 @@ class Course {
   final String code;
   final int section;
   final String lecturer;
-   List<Class> schedule;
+  List<Class> schedule;
 
   Course({
     required this.name,
