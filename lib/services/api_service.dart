@@ -61,17 +61,16 @@ class ApiService {
     }
   }
 
-  static Future<List<UserDTO>> fetchAllStudentInfo(
-      String matricNo, String ic) async {
+  static Future<String> fetchMatricNo(String matricNo, String ic) async {
     final response = await http
         .get(Uri.parse("http://web.fc.utm.my/ttms/web_man_webservice_json.cgi"
             "?entity=authentication"
             "&login=${matricNo}"
             "&password=${ic}"));
 
-     if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((data) => UserDTO.fromJson(data)).toList();
+      return jsonResponse[0]['login_name'];
     } else {
       throw Exception('Unexpected error occured!');
     }
