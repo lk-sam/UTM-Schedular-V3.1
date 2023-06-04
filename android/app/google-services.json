@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "188934447626",
+    "project_id": "utm-schedular-v3-1",
+    "storage_bucket": "utm-schedular-v3-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188934447626:android:ddc4bee8a9d27797b1b5f3",
+        "android_client_info": {
+          "package_name": "com.example.utmschedular"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "188934447626-teo17eoqh5o1hvefd7ee92qhub33e1jm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5i3gLxdHWIwVn9LI5-9AvvWVxNEOiUa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "188934447626-teo17eoqh5o1hvefd7ee92qhub33e1jm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
