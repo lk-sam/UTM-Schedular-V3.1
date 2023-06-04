@@ -4,8 +4,8 @@ import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:utmschedular/widgets/timetable_container.dart';
 import 'package:utmschedular/screens/testing_data.dart';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/firebase_service.dart';
 
 class TimetablePage extends StatefulWidget {
   const TimetablePage({super.key});
@@ -23,7 +23,7 @@ class _TimetablePageState extends State<TimetablePage> {
       key: _scaffoldKey,
       appBar: CustomAppBar(title: "TimeTable", scaffoldKey: _scaffoldKey),
       drawer: CustomDrawer(),
-      body: TimetableContainer(timetables:timetables),
+      body: TimetableContainer(timetables: timetables),
     );
   }
 }
@@ -43,97 +43,14 @@ class _ExampleTimetableState extends State<ExampleTimetable> {
   final CollectionReference _productss =
       FirebaseFirestore.instance.collection('products');
 
-  // This function is triggered when the floatting button or one of the edit buttons is pressed
-  // Adding a product if no documentSnapshot is passed
-  // If documentSnapshot != null then update an existing product
-  Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot]) async {
-    String action = 'create';
-    if (documentSnapshot != null) {
-      action = 'update';
-      _nameController.text = documentSnapshot['name'];
-      _priceController.text = documentSnapshot['price'].toString();
-    }
-
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                // prevent the soft keyboard from covering text fields
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                TextField(
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  controller: _priceController,
-                  decoration: const InputDecoration(
-                    labelText: 'Price',
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: Text(action == 'create' ? 'Create' : 'Update'),
-                  onPressed: () async {
-                    final String? name = _nameController.text;
-                    final double? price =
-                        double.tryParse(_priceController.text);
-                    if (name != null && price != null) {
-                      if (action == 'create') {
-                        // Persist a new product to Firestore
-                        await _productss.add({"name": name, "price": price});
-                      }
-
-                      if (action == 'update') {
-                        // Update the product
-                        await _productss
-                            .doc(documentSnapshot!.id)
-                            .update({"name": name, "price": price});
-                      }
-
-                      // Clear the text fields
-                      _nameController.text = '';
-                      _priceController.text = '';
-
-                      // Hide the bottom sheet
-                      Navigator.of(context).pop();
-                    }
-                  },
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  // Deleteing a product by id
-  Future<void> _deleteProduct(String productId) async {
-    await _productss.doc(productId).delete();
-
-    // Show a snackbar
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('You have successfully deleted a product')));
-  }
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kindacode.com'),
-      ),
+      key: _scaffoldKey,
+      appBar: CustomAppBar(title: "TimeTable", scaffoldKey: _scaffoldKey),
       // Using StreamBuilder to display all products from Firestore in real-time
+      drawer: CustomDrawer(),
       body: StreamBuilder(
         stream: _productss.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
@@ -155,13 +72,12 @@ class _ExampleTimetableState extends State<ExampleTimetable> {
                           // Press this button to edit a single product
                           IconButton(
                               icon: const Icon(Icons.edit),
-                              onPressed: () =>
-                                  _createOrUpdate(documentSnapshot)),
+                              onPressed: () async =>{await FirebaseAPI.createOrUpdate( _nameController, _priceController,context,_productss,documentSnapshot)}
+                          ),
                           // This icon button is used to delete a single product
                           IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () =>
-                                  _deleteProduct(documentSnapshot.id)),
+                              onPressed: () async =>{await FirebaseAPI.deleteProduct(documentSnapshot.id,_productss,context)})
                         ],
                       ),
                     ),
@@ -178,7 +94,7 @@ class _ExampleTimetableState extends State<ExampleTimetable> {
       ),
       // Add new product
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _createOrUpdate(),
+        onPressed: () => FirebaseAPI.createOrUpdate(_nameController, _priceController,context,_productss),
         child: const Icon(Icons.add),
       ),
     );
