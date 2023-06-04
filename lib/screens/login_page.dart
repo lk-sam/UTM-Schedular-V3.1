@@ -1,8 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:utmschedular/screens/home_screen.dart';
 import 'package:utmschedular/screens/register_page.dart';
-import 'package:utmschedular/screens/task_screen.dart';
+
 import 'package:utmschedular/constants/routes.dart';
+
+import '../models/DTO/userDTO.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +17,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late Future<UserDTO> userInfo = Future.value();
+  String matricNo = ''; // Get matric no. from user
+  String password = ''; // Get password from user
+
+  final users = FirebaseFirestore.instance;
+
+  //Use to get username and password form firestore.
+  Future<UserDTO> getUserAuth(matricNo) async {
+    final snapshot = await users
+        .collection('User')
+        .where("matric no", isEqualTo: matricNo)
+        .get();
+    final userData = snapshot.docs.map((e) => UserDTO.fromSnapshot(e)).single;
+    return userData;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: const [
-                                              Text('Name',
+                                              Text('Matric No.',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w500,
@@ -101,11 +122,17 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
-                                            children: const [
+                                            children: [
                                               TextField(
-                                                  decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                              ))
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    matricNo = value;
+                                                  });
+                                                },
+                                              )
                                             ])),
                                     Container(
                                         padding: EdgeInsets.all(10),
@@ -129,14 +156,20 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
-                                            children: const [
+                                            children: [
                                               TextField(
-                                                  decoration: InputDecoration(
-                                                border: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color:
-                                                            Color(0xff81163f))),
-                                              ))
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Color(
+                                                              0xff81163f))),
+                                                ),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    password = value;
+                                                  });
+                                                },
+                                              )
                                             ])),
                                     Container(
                                         padding:
@@ -154,9 +187,130 @@ class _LoginPageState extends State<LoginPage> {
                                             backgroundColor: Color(0xff81163f),
                                             shadowColor: Colors.black,
                                           ),
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                                context, taskRoute);
+                                          onPressed: () async {
+                                            setState(() {
+                                              userInfo = getUserAuth(matricNo);
+                                            });
+                                            UserDTO convertUserInfo =
+                                                await userInfo;
+                                            print(
+                                                convertUserInfo.getPassword());
+                                            if (matricNo == '' ||
+                                                password == '') {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  duration: const Duration(
+                                                      seconds: 1,
+                                                      milliseconds: 200),
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  elevation: 0,
+                                                  content: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              16),
+                                                      decoration: const BoxDecoration(
+                                                          color: Color.fromARGB(
+                                                              255, 157, 27, 60),
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      10))),
+                                                      child: const Center(
+                                                          child: Text(
+                                                              "Incomplete Infomation! Please Fill All Information"))),
+                                                ),
+                                              );
+                                            } else {
+                                              if ((matricNo ==
+                                                      convertUserInfo
+                                                          .getMatricNo()) &&
+                                                  (password ==
+                                                      convertUserInfo
+                                                          .getPassword())) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    duration: const Duration(
+                                                        seconds: 1,
+                                                        milliseconds: 200),
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    elevation: 0,
+                                                    content: Container(
+                                                        padding: const EdgeInsets
+                                                                .fromLTRB(
+                                                            16, 30, 16, 30),
+                                                        decoration: const BoxDecoration(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    16,
+                                                                    255,
+                                                                    206,
+                                                                    218),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10))),
+                                                        child: const Center(
+                                                            child: Text(
+                                                          "Successful Login...",
+                                                          style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ))),
+                                                  ),
+                                                );
+                                                Navigator.pushNamed(
+                                                    context,
+                                                    taskRoute,
+                                                   );
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    duration: const Duration(
+                                                        seconds: 1,
+                                                        milliseconds: 200),
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    elevation: 0,
+                                                    content: Container(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                                16),
+                                                        decoration: const BoxDecoration(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    157,
+                                                                    27,
+                                                                    60),
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        10))),
+                                                        child: const Center(
+                                                            child: Text(
+                                                                "Wrong Password or Matric No.! Please check again"))),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (context) =>
+                                            //             const HomePage()));
                                           },
                                           child: const Text('Log in'),
                                         ))

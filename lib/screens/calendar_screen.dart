@@ -15,7 +15,7 @@ class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   
   late final ValueNotifier<List<Event>> _selectedEvents;
-  CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by long pressing a date
   DateTime _focusedDay = DateTime.now();
@@ -88,7 +88,7 @@ class _CalendarPageState extends State<CalendarPage> {
             rangeSelectionMode: _rangeSelectionMode,
             eventLoader: _getEventsForDay,
             startingDayOfWeek: StartingDayOfWeek.sunday,
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
                 color: Color.fromARGB(
                     255, 92, 0, 31), //Color(0xFF81163F),
