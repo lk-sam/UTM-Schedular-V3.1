@@ -11,9 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.6
+  #Calendar depandencies
+  table_calendar: ^3.0.9
   # Firebase auth and firebase core
   firebase_core: ^2.13.1
   firebase_auth: ^4.6.2
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,8 @@
+import 'package:provider/provider.dart';
+
 import 'package:flutter/material.dart';
 import 'package:utmschedular/constants/routes.dart';
+import 'package:utmschedular/models/domain/task.dart';
 import 'package:utmschedular/screens/calendar_screen.dart';
 import 'package:utmschedular/screens/edit_course_page.dart';
 import 'package:utmschedular/screens/home_screen.dart';
@@ -7,13 +10,12 @@ import 'package:utmschedular/screens/task_screen.dart';
 import 'package:utmschedular/screens/timetable_screen.dart';
 import 'package:utmschedular/screens/testing_course_page.dart';
 import 'package:utmschedular/screens/login_page.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -21,22 +23,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'UTM Scheduler',
-      theme: ThemeData(
-        primaryColor: const Color(0xFF81163F),
+    return Provider<TaskService>(
+      create: (context) => TaskService(),
+      child: MaterialApp(
+        title: 'UTM Scheduler',
+        theme: ThemeData(
+          primaryColor: const Color(0xFF81163F),
+        ),
+        home: const LoginPage(),
+        routes: {
+          calendarRoute: (context) => const CalendarPage(),
+          timetableRoute: (context) => const ExampleTimetable(),
+          taskRoute: (context) => TaskOverviewPage(taskService: Provider.of<TaskService>(context, listen: false)),
+          editCourseRoute: (context) => EditCoursePage(),
+          courseListRoute: (context) => CourseScreen(),
+        },
       ),
-      home: const LoginPage(),
-      routes: {
-        calendarRoute: (context) => const CalendarPage(),
-        timetableRoute: (context) => const ExampleTimetable(),
-        taskRoute: (context) => const TaskOverviewPage(),
-        editCourseRoute: (context) => EditCoursePage(),
-        courseListRoute: (context) => CourseScreen(),
-      },
     );
   }
 }
+
 
 class MyBlankApp extends StatelessWidget {
   @override

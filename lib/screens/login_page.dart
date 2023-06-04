@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:utmschedular/screens/home_screen.dart';
 import 'package:utmschedular/screens/register_page.dart';
+import 'package:utmschedular/screens/task_screen.dart';
+import 'package:utmschedular/constants/routes.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -153,11 +155,8 @@ class _LoginPageState extends State<LoginPage> {
                                             shadowColor: Colors.black,
                                           ),
                                           onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const HomePage()));
+                                            Navigator.pushNamed(
+                                                context, taskRoute);
                                           },
                                           child: const Text('Log in'),
                                         ))
