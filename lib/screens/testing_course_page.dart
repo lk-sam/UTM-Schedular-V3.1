@@ -7,6 +7,8 @@ import 'package:utmschedular/services/api_service.dart';
 import 'package:utmschedular/widgets/course_card.dart';
 import 'package:utmschedular/utils/utils.dart';
 import 'package:utmschedular/widgets/course_container.dart';
+import 'package:utmschedular/components/custom_appBar.dart';
+
 class CourseScreen extends StatefulWidget {
   const CourseScreen({super.key});
   
@@ -36,11 +38,13 @@ class _CourseScreenState extends State<CourseScreen> {
     }
     return courses;
   }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF81163F),
         title: Text('Courses'),
       ),
       body: Column(

@@ -12,17 +12,40 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: const Color(0xFF81163F),
       title: Text(title),
       leading: IconButton(
-        icon: Icon(Icons.menu),
+        icon: const Icon(Icons.menu),
         onPressed: () {
           scaffoldKey.currentState?.openDrawer();
         },
       ),
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.account_circle),
+          icon: const Icon(Icons.account_circle),
           onPressed: () {
-            // Add your profile/settings functionality here
-            print('Profile/Settings button pressed');
+            showModalBottomSheet(
+                context: context,
+                builder: (BuildContext bc) {
+                  return Container(
+                    child: Wrap(
+                      children: <Widget>[
+                        ListTile(
+                          leading: Icon(Icons.person),
+                          title: Text('View Profile'),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text('Settings'),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.logout),
+                          title: Text('Log Out'),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  );
+                });
           },
         ),
       ],
@@ -30,5 +53,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

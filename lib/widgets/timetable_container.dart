@@ -100,7 +100,7 @@ class TimetableContainer extends StatelessWidget {
                                           255, 240, 62, 62),
                                     ),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [

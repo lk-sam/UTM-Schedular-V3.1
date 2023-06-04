@@ -47,7 +47,7 @@ class Course {
       code: courseDTO.kodSubjek,
       section: courseDTO.seksyen,
       lecturer: lecturer ?? "Unknown", // As the DTO doesn't have this info
-      schedule: classes, // Your list of classes
+      schedule: classes, 
     );
   }
 }
