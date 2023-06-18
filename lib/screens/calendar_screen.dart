@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:utmschedular/components/custom_appBar.dart';
 import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:utmschedular/utils/utils.dart';
 import 'package:utmschedular/models/domain/task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:utmschedular/widgets/task_card.dart';
 
 Future<String> getMatricNo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -37,7 +39,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   void initState() {
     super.initState();
-
+    print(_focusedDay);
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
 
@@ -112,8 +114,10 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
+  
   @override
   Widget build(BuildContext context) {
+    final taskService = Provider.of<TaskService>(context, listen: false);
     Future<String> matricNo = getMatricNo();
     print(_calendarFormat);
     return Scaffold(
@@ -178,21 +182,9 @@ class _CalendarPageState extends State<CalendarPage> {
                           itemCount: selectedTasks.length,
                           itemBuilder: (context, index) {
                             final task = selectedTasks[index];
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 4.0,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: ListTile(
-                                onTap: () => print('${task.title} tapped'),
-                                title: Text(task.title),
-                                subtitle: Text(task.dueDateTime.toString()),
-                              ),
-                            );
+                            return TaskCard(
+                              task: task, 
+                              taskService: taskService);
                           },
                         );
                       } else if (snapshot.hasError) {

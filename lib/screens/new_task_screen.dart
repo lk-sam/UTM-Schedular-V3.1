@@ -112,8 +112,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                             category: 'Category',
                             userId: snapshot.data!,
                             isRepeated: false,
-                            id:
-                                                        '', 
+                            id: '', 
                           );
                           await widget.taskService.createTask(newTask);
                           Navigator.of(context).pop();

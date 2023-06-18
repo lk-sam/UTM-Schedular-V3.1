@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:utmschedular/models/domain/task.dart';
-
+import 'package:provider/provider.dart';
 
 enum TaskAction { Edit, Delete, Complete }
 class TaskOverviewPage extends StatefulWidget {
@@ -68,15 +68,42 @@ class _TaskOverviewPageState extends State<TaskOverviewPage> {
   }
 
   void _onTaskActionSelected(TaskAction action) {
+    final taskService = Provider.of<TaskService>(context, listen: false);
     switch (action) {
       case TaskAction.Edit:
         // implement editing task
         break;
       case TaskAction.Delete:
         // implement deleting task
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Delete task'),
+              content: Text('Are you sure you want to delete this task?'),
+              actions: [
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: Text('Delete'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    taskService.deleteTask(widget.task);
+                  },
+                ),
+              ],
+            );
+          },
+        );
         break;
       case TaskAction.Complete:
         // implement completing task
+          Navigator.pop(context);
+          taskService.toggleTaskCompletion(widget.task);
         break;
     }
   }
@@ -116,6 +143,7 @@ class _TaskOverviewPageState extends State<TaskOverviewPage> {
                       const PopupMenuItem<TaskAction>(
                         value: TaskAction.Delete,
                         child: Text('Delete Task'),
+                        
                       ),
                       const PopupMenuItem<TaskAction>(
                         value: TaskAction.Complete,

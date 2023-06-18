@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:utmschedular/models/domain/task.dart';
 import 'package:utmschedular/screens/new_task_screen.dart';
 import 'package:utmschedular/services/preference_service.dart';
+import 'package:utmschedular/widgets/task_card.dart';
 import 'package:utmschedular/widgets/task_overview.dart';
 
 enum TaskFilter { Overdue, Today, Future }
@@ -57,7 +58,8 @@ class TasksList extends StatelessWidget {
                     break;
                 }
 
-                filteredTasks = filteredTasks.where((task) => !task.isCompleted).toList();
+                filteredTasks =
+                    filteredTasks.where((task) => !task.isCompleted).toList();
 
                 return Padding(
                   padding: EdgeInsets.all(8.0),
@@ -98,40 +100,9 @@ class TasksList extends StatelessWidget {
                               );
                             } else {
                               Task task = filteredTasks[index];
-                              return Card(
-                                elevation: 4,
-                                child: ListTile(
-                                  leading: IconButton(
-                                    icon: Icon(task.isCompleted ? Icons.check_circle_outline : Icons.circle_outlined),
-                                    onPressed: () {
-                                      taskService.toggleTaskCompletion(task);
-                                    },
-                                  ),
-                                  title: Text(task.title),
-                                  subtitle: Text(task.category),
-                                  trailing: Text(task.dueDateTime.toString()),
-                                  //isThreeLine: true,
-                                  onTap: () {
-                                    showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        builder: (context) {
-                                          return FractionallySizedBox(
-                                            heightFactor: 2 / 3,
-                                            child: TaskOverviewPage(task: task),
-                                          );
-                                        });
-                                  },
-                                  // onLongPress: () {
-                                  //   showDialog(
-                                  //     context: context, 
-                                  //     builder: (context) {
-
-                                  //     }
-                                  //     )
-                                  // },
-                                ),
-                              );
+                              return TaskCard(
+                                task: task, 
+                                taskService: taskService);
                             }
                           },
                         ),
