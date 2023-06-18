@@ -4,33 +4,46 @@ import 'package:utmschedular/models/DTO/classDTO.dart';
 import 'dart:collection';
 
 import 'package:table_calendar/table_calendar.dart';
+
 enum Days { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday }
-enum Times { Time8AM, Time9AM, Time10AM, Time11AM, Time12PM, Time1PM, Time2PM, Time3PM, Time4PM, Time5PM }
+
+enum Times {
+  Time8AM,
+  Time9AM,
+  Time10AM,
+  Time11AM,
+  Time12PM,
+  Time1PM,
+  Time2PM,
+  Time3PM,
+  Time4PM,
+  Time5PM
+}
 
 class ClassConverter {
   static List<Class> convertFromDTOs(List<ClassDTO> classDTOs) {
-    classDTOs.sort((a, b) => a.hari != b.hari ? a.hari.compareTo(b.hari) : a.masa.compareTo(b.masa));
+    classDTOs.sort((a, b) =>
+        a.hari != b.hari ? a.hari.compareTo(b.hari) : a.masa.compareTo(b.masa));
     List<Class> classes = [];
     for (int i = 0; i < classDTOs.length; i++) {
       int startMasa = classDTOs[i].masa;
       int endMasa = startMasa;
       int currentDay = classDTOs[i].hari;
-      while (i+1 < classDTOs.length && classDTOs[i+1].hari == currentDay && classDTOs[i+1].masa == classDTOs[i].masa + 1) {
+      while (i + 1 < classDTOs.length &&
+          classDTOs[i + 1].hari == currentDay &&
+          classDTOs[i + 1].masa == classDTOs[i].masa + 1) {
         endMasa = classDTOs[++i].masa;
       }
       classes.add(Class(
         day: Days.values[currentDay - 1].toString().split('.')[1],
         timeStart: Times.values[startMasa - 2].toString().split('.')[1],
         timeEnd: Times.values[endMasa - 1].toString().split('.')[1],
-        location: classDTOs[i].ruang.namaRuang,  
+        location: classDTOs[i].ruang.namaRuang,
       ));
     }
     return classes;
   }
 }
-
-
-
 
 //Calendar event
 class Event {

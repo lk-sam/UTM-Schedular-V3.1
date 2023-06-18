@@ -3,6 +3,7 @@ import 'package:utmschedular/components/custom_appBar.dart';
 import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:utmschedular/utils/utils.dart';
+import 'package:utmschedular/models/domain/task.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -13,7 +14,7 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
@@ -42,15 +43,6 @@ class _CalendarPageState extends State<CalendarPage> {
     return kEvents[day] ?? [];
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = daysInRange(start, end);
-
-    return [
-      for (final d in days) ..._getEventsForDay(d),
-    ];
-  }
-
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
@@ -67,13 +59,11 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = ModalRoute.of(context)?.settings.arguments as String?;
     print(_calendarFormat);
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
-        title: "Calendar", 
-        scaffoldKey: _scaffoldKey
-        ),
+      appBar: CustomAppBar(title: "Calendar", scaffoldKey: _scaffoldKey),
       drawer: CustomDrawer(),
       body: Column(
         children: [
@@ -90,8 +80,7 @@ class _CalendarPageState extends State<CalendarPage> {
             startingDayOfWeek: StartingDayOfWeek.sunday,
             calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
-                color: Color.fromARGB(
-                    255, 92, 0, 31), //Color(0xFF81163F),
+                color: Color.fromARGB(255, 92, 0, 31), //Color(0xFF81163F),
                 shape: BoxShape.circle,
               ),
               outsideDaysVisible: false,
@@ -101,7 +90,7 @@ class _CalendarPageState extends State<CalendarPage> {
               if (_calendarFormat != format) {
                 setState(() {
                   _calendarFormat = format;
-                 print("change to ${_calendarFormat}");
+                  print("change to ${_calendarFormat}");
                 });
               }
             },
@@ -111,28 +100,38 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           const SizedBox(height: 8.0),
           Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
-                    );
-                  },
-                );
+            child: StreamBuilder<List<Task>>(
+              stream:
+                  TaskService().getTasks(userId), //fetch task based on userID
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final tasks = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      final task = tasks[index];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 4.0,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: ListTile(
+                          onTap: () => print('${task.title} tapped'),
+                          title: Text(task.title),
+                          subtitle: Text(task.dueDateTime.toString()),
+                        ),
+                      );
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return CircularProgressIndicator();
+                }
               },
             ),
           ),
