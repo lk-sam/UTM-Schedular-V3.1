@@ -3,7 +3,6 @@ import 'package:utmschedular/components/custom_appBar.dart';
 import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:utmschedular/models/domain/class.dart';
 import 'package:utmschedular/models/domain/course.dart';
-
 import '../models/domain/timetable.dart';
 
 class CourseScreen extends StatelessWidget {

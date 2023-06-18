@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:utmschedular/models/domain/task.dart';
 import 'package:utmschedular/services/preference_service.dart';
 
-class NewTaskPage extends StatefulWidget {
+class EditTaskPage extends StatefulWidget {
   final TaskService taskService;
+  final Task task; // Add the task parameter
 
-  const NewTaskPage({Key? key, required this.taskService}) : super(key: key);
+  const EditTaskPage({Key? key, required this.taskService, required this.task})
+      : super(key: key);
 
   @override
-  _NewTaskPageState createState() => _NewTaskPageState();
+  _EditTaskPageState createState() => _EditTaskPageState();
 }
 
-class _NewTaskPageState extends State<NewTaskPage> {
+class _EditTaskPageState extends State<EditTaskPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _venueController = TextEditingController();
-  final TextEditingController _categoryController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _venueController = TextEditingController();
+  TextEditingController _categoryController = TextEditingController();
   DateTime? _dueDateTime;
   late Future<String> matricNo;
 
@@ -23,6 +25,10 @@ class _NewTaskPageState extends State<NewTaskPage> {
   void initState() {
     super.initState();
     matricNo = getMatricNo();
+    _titleController.text = widget.task.title; // Set the default value for the title
+    _venueController.text = widget.task.venue; // Set the default value for the venue
+    _categoryController.text = widget.task.category; // Set the default value for the category
+    _dueDateTime = widget.task.dueDateTime; // Set the default value for the due date and time
   }
 
   @override
@@ -38,7 +44,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
     final Color primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Task'),
+        title: Text('Edit Task'),
         backgroundColor: primaryColor,
       ),
       body: SingleChildScrollView(
@@ -103,7 +109,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           onPressed: () async {
                             final DateTime? pickedDate = await showDatePicker(
                               context: context,
-                              initialDate: DateTime.now(),
+                              initialDate: _dueDateTime ?? DateTime.now(),
                               firstDate: DateTime(2000),
                               lastDate: DateTime(2099),
                               builder: (BuildContext context, Widget? child) {
@@ -123,7 +129,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
                               final TimeOfDay? pickedTime =
                                   await showTimePicker(
                                 context: context,
-                                initialTime: TimeOfDay.now(),
+                                initialTime: TimeOfDay.fromDateTime(
+                                    _dueDateTime ?? DateTime.now()),
                                 builder: (BuildContext context, Widget? child) {
                                   return Theme(
                                     data: ThemeData.light().copyWith(
@@ -175,7 +182,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
                           onPressed: () async {
                             final TimeOfDay? pickedTime = await showTimePicker(
                               context: context,
-                              initialTime: TimeOfDay.now(),
+                              initialTime: TimeOfDay.fromDateTime(
+                                  _dueDateTime ?? DateTime.now()),
                               builder: (BuildContext context, Widget? child) {
                                 return Theme(
                                   data: ThemeData.light().copyWith(
@@ -233,22 +241,21 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            Task newTask = Task(
+                            Task editedTask = Task(
+                              id: widget.task.id,
                               title: _titleController.text,
                               venue: _venueController.text,
                               dueDateTime: _dueDateTime!,
-                              category:
-                                  _categoryController.text, // Save the category
+                              category: _categoryController.text,
                               userId: snapshot.data!,
-                              isRepeated: false,
-                              id: '',
+                              isRepeated: widget.task.isRepeated,
                             );
-                            await widget.taskService.createTask(newTask);
+                            await widget.taskService.updateTask(editedTask);
                             Navigator.of(context).pop();
                           }
                         },
                         child: Text(
-                          'Submit',
+                          'Save Changes',
                           style: TextStyle(color: Colors.white),
                         ),
                       );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:utmschedular/models/domain/task.dart';
+import 'package:utmschedular/screens/edit_task_screen.dart';
 import 'package:utmschedular/widgets/task_overview.dart';
 
 class TaskCard extends StatefulWidget {
@@ -65,7 +66,7 @@ class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin
                         child: Text('Edit'),
                         onPressed: () {
                           Navigator.pop(context);
-                          // TODO: Implement the edit task logic
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditTaskPage(task: widget.task, taskService: widget.taskService)));
                         },
                       ),
                       SimpleDialogOption(
@@ -73,7 +74,30 @@ class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin
                         onPressed: () {
                           Navigator.pop(context);
                           //confirmation
-                          
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Delete task'),
+                                content: Text('Are you sure you want to delete this task?'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Delete'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      widget.taskService.deleteTask(widget.task);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
                       SimpleDialogOption(

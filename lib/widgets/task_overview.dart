@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:utmschedular/models/domain/task.dart';
 import 'package:provider/provider.dart';
+import 'package:utmschedular/screens/edit_task_screen.dart';
 
 enum TaskAction { Edit, Delete, Complete }
 class TaskOverviewPage extends StatefulWidget {
@@ -72,6 +73,8 @@ class _TaskOverviewPageState extends State<TaskOverviewPage> {
     switch (action) {
       case TaskAction.Edit:
         // implement editing task
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EditTaskPage(task: widget.task, taskService: taskService)));
         break;
       case TaskAction.Delete:
         // implement deleting task
