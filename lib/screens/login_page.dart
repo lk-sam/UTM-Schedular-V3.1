@@ -17,6 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<UserDTO> userInfo = Future.value();
   String matricNo = ''; // Get matric no. from user
   String password = ''; // Get password from user
@@ -268,6 +269,9 @@ class _LoginPageState extends State<LoginPage> {
                                                         ))),
                                                   ),
                                                 );
+                                                SharedPreferences prefs = await _prefs;  // await the Future<SharedPreferences>
+                                                prefs.setString('matricNo', matricNo); 
+
                                                 Navigator.pushNamed(
                                                     context,
                                                     taskRoute,
