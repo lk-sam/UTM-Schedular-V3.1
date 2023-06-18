@@ -6,9 +6,9 @@ class Task {
   final DateTime dueDateTime;
   final String venue;
   final String category;
-  final String tag;
   final bool isRepeated;
   final String userId;
+  final bool isCompleted;
 
   Task({
     required this.id,
@@ -16,9 +16,9 @@ class Task {
     required this.dueDateTime,
     required this.venue,
     required this.category,
-    required this.tag,
     required this.userId,
     this.isRepeated = false,
+    this.isCompleted = false,
   });
 
   static Task fromDocument(DocumentSnapshot doc) {
@@ -29,9 +29,9 @@ class Task {
       dueDateTime: (json['dueDateTime'] as Timestamp).toDate(),
       venue: json['venue'],
       category: json['category'],
-      tag: json['tag'],
       userId: json['userId'],
       isRepeated: json['isRepeated'] ?? false,
+      isCompleted: json['isCompleted'] ?? false,
     );
   }
 
@@ -41,9 +41,9 @@ class Task {
       'dueDateTime': dueDateTime,
       'venue': venue,
       'category': category,
-      'tag': tag,
       'userId': userId,
       'isRepeated': isRepeated,
+      'isCompleted': isCompleted,
     };
   }
 }
@@ -73,5 +73,10 @@ class TaskService {
   // Delete task from Firestore
   Future<void> deleteTask(Task task) async {
     await taskCollection.doc(task.id).delete();
+  }
+
+  //toggle task completion status
+  Future<void> toggleTaskCompletion(Task task) async {
+    await taskCollection.doc(task.id).update({'isCompleted': !task.isCompleted});
   }
 }
