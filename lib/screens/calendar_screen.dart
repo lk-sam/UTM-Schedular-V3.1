@@ -60,6 +60,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     final userId = ModalRoute.of(context)?.settings.arguments as String?;
+    final matricNo = getMatricNo();
     print(_calendarFormat);
     return Scaffold(
       key: _scaffoldKey,
@@ -101,8 +102,8 @@ class _CalendarPageState extends State<CalendarPage> {
           const SizedBox(height: 8.0),
           Expanded(
             child: StreamBuilder<List<Task>>(
-              stream:
-                  TaskService().getTasks(userId), //fetch task based on userID
+              stream: TaskService()
+                  .getTasks(userId), //fetch task based on matricNumber
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final tasks = snapshot.data!;
