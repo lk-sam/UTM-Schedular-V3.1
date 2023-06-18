@@ -3,7 +3,13 @@ import 'package:utmschedular/components/custom_appBar.dart';
 import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:utmschedular/utils/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+Future<String> getMatricNo() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? matricNo = prefs.getString('matricNo');
+  return matricNo ?? ''; // returns the stored matricNo if it exists, else an empty string
+}
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
@@ -67,7 +73,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(_calendarFormat);
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: CustomAppBar(
