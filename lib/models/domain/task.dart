@@ -49,20 +49,21 @@ class Task {
 }
 
 class TaskService {
-  final CollectionReference taskCollection = FirebaseFirestore.instance.collection('tasks');
+  final CollectionReference taskCollection =
+      FirebaseFirestore.instance.collection('tasks');
 
   // Create new task in Firestore
   Future<void> createTask(Task task) async {
     DocumentReference docRef = await taskCollection.add(task.toJson());
-    await docRef.update({'id': docRef.id});  // update the task document with the generated ID
+    await docRef.update(
+        {'id': docRef.id}); // update the task document with the generated ID
   }
 
   // Get all tasks of a user from Firestore
   Stream<List<Task>> getTasks(String userId) {
-    return taskCollection
-      .where('userId', isEqualTo: userId)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => Task.fromDocument(doc)).toList());
+    return taskCollection.where('userId', isEqualTo: userId).snapshots().map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => Task.fromDocument(doc)).toList());
   }
 
   // Update existing task in Firestore

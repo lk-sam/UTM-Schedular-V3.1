@@ -3,15 +3,18 @@ import 'package:utmschedular/components/custom_appBar.dart';
 import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:utmschedular/utils/utils.dart';
+import 'package:utmschedular/models/domain/task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<String> getMatricNo() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? matricNo = prefs.getString('matricNo');
-  return matricNo ?? ''; // returns the stored matricNo if it exists, else an empty string
+  return matricNo ??
+      ''; // returns the stored matricNo if it exists, else an empty string
 }
+
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+  const CalendarPage({Key? key}) : super(key: key);
 
   @override
   _CalendarPageState createState() => _CalendarPageState();
@@ -19,7 +22,7 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
@@ -29,12 +32,27 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
 
+  List<Task> tasks = [];
+
   @override
   void initState() {
     super.initState();
 
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+
+    _loadTasks();
+  }
+
+  void _loadTasks() async {
+    final matricNo = await getMatricNo();
+    final taskService = TaskService();
+    final taskStream = taskService.getTasks(matricNo);
+    taskStream.listen((taskList) {
+      setState(() {
+        tasks = taskList;
+      });
+    });
   }
 
   @override
@@ -44,17 +62,16 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
     return kEvents[day] ?? [];
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = daysInRange(start, end);
-
-    return [
-      for (final d in days) ..._getEventsForDay(d),
-    ];
+  List<Task> _getTasksForSelectedDate(DateTime selectedDate, List<Task> tasks) {
+    return tasks
+        .where((task) =>
+            task.dueDateTime.year == selectedDate.year &&
+            task.dueDateTime.month == selectedDate.month &&
+            task.dueDateTime.day == selectedDate.day)
+        .toList();
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -62,7 +79,7 @@ class _CalendarPageState extends State<CalendarPage> {
       setState(() {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
-        _rangeStart = null; // Important to clean those
+        _rangeStart = null;
         _rangeEnd = null;
         _rangeSelectionMode = RangeSelectionMode.toggledOff;
       });
@@ -71,15 +88,37 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
+  Widget _buildMarker(BuildContext context, DateTime day, List<Event> events) {
+    final tasksCount = _getTasksForSelectedDate(day, tasks).length;
+
+    if (tasksCount == 0) {
+      return SizedBox(); // Return an empty SizedBox if tasksCount is 0
+    }
+
+    return Positioned(
+      bottom: 4,
+      right: 4,
+      child: Container(
+        width: 16,
+        height: 16,
+        decoration: BoxDecoration(color: Colors.amber[800]),
+        child: Center(
+          child: Text(
+            '$tasksCount',
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
+    Future<String> matricNo = getMatricNo();
+    print(_calendarFormat);
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
-        title: "Calendar", 
-        scaffoldKey: _scaffoldKey
-        ),
+      appBar: CustomAppBar(title: "Calendar", scaffoldKey: _scaffoldKey),
       drawer: CustomDrawer(),
       body: Column(
         children: [
@@ -93,11 +132,13 @@ class _CalendarPageState extends State<CalendarPage> {
             calendarFormat: _calendarFormat,
             rangeSelectionMode: _rangeSelectionMode,
             eventLoader: _getEventsForDay,
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: _buildMarker,
+            ),
             startingDayOfWeek: StartingDayOfWeek.sunday,
             calendarStyle: const CalendarStyle(
               selectedDecoration: BoxDecoration(
-                color: Color.fromARGB(
-                    255, 92, 0, 31), //Color(0xFF81163F),
+                color: Color.fromARGB(255, 92, 0, 31), //Color(0xFF81163F),
                 shape: BoxShape.circle,
               ),
               outsideDaysVisible: false,
@@ -107,7 +148,7 @@ class _CalendarPageState extends State<CalendarPage> {
               if (_calendarFormat != format) {
                 setState(() {
                   _calendarFormat = format;
-                 print("change to ${_calendarFormat}");
+                  print("change to ${_calendarFormat}");
                 });
               }
             },
@@ -117,28 +158,51 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           const SizedBox(height: 8.0),
           Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
-                    );
-                  },
-                );
+            child: FutureBuilder<String>(
+              future: getMatricNo(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final matricNo = snapshot.data ?? '';
+                  return StreamBuilder<List<Task>>(
+                    stream: TaskService().getTasks(matricNo),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final tasks = snapshot.data!;
+                        final selectedTasks =
+                            _getTasksForSelectedDate(_selectedDay!, tasks);
+                        return ListView.builder(
+                          itemCount: selectedTasks.length,
+                          itemBuilder: (context, index) {
+                            final task = selectedTasks[index];
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 4.0,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: ListTile(
+                                onTap: () => print('${task.title} tapped'),
+                                title: Text(task.title),
+                                subtitle: Text(task.dueDateTime.toString()),
+                              ),
+                            );
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    },
+                  );
+                }
               },
             ),
           ),

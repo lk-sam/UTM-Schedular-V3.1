@@ -7,9 +7,10 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // New import
 import 'package:utmschedular/widgets/task_list.dart';
 
 class TaskOverviewPage extends StatefulWidget {
-  final TaskService taskService;  // inject TaskService
+  final TaskService taskService; // inject TaskService
 
-  const TaskOverviewPage({Key? key, required this.taskService}) : super(key: key);
+  const TaskOverviewPage({Key? key, required this.taskService})
+      : super(key: key);
 
   @override
   State<TaskOverviewPage> createState() => _HomePageState();
@@ -26,10 +27,7 @@ class _HomePageState extends State<TaskOverviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
-        title: "Task Overview", 
-        scaffoldKey: _scaffoldKey
-      ),
+      appBar: CustomAppBar(title: "Task Overview", scaffoldKey: _scaffoldKey),
       drawer: CustomDrawer(),
       body: Column(
         children: [
@@ -47,14 +45,14 @@ class _HomePageState extends State<TaskOverviewPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SmoothPageIndicator(
-              controller: controller,  // PageController
+              controller: controller, // PageController
               count: 3,
               effect: ScrollingDotsEffect(
                 activeDotColor: Theme.of(context).primaryColor,
                 dotColor: Color(0xFFDADADA),
                 dotHeight: 8,
                 dotWidth: 8,
-                ), 
+              ),
               onDotClicked: (index) {
                 controller.animateToPage(
                   index,
@@ -68,7 +66,8 @@ class _HomePageState extends State<TaskOverviewPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) => NewTaskPage(taskService: widget.taskService)));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => NewTaskPage(taskService: widget.taskService)));
         },
         child: const Icon(Icons.add),
         backgroundColor: Theme.of(context).primaryColor,
@@ -81,5 +80,23 @@ class _HomePageState extends State<TaskOverviewPage> {
 
 
 
+                return ListView.builder(
+                  itemCount: filteredTasks.length,
+                  itemBuilder: (context, index) {
+                    Task task = filteredTasks[index];
+                    return ListTile(
+                      title: Text(task.title),
+                      subtitle: Text(task.category),
+                    );
+                  },
+                );
+              }
+            },
+          );
+        }
+      },
+    );
+  }
+}
 
 
