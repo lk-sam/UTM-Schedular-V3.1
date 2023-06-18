@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:utmschedular/screens/home_screen.dart';
 import 'package:utmschedular/screens/register_page.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:utmschedular/constants/routes.dart';
 
 import '../models/DTO/userDTO.dart';
