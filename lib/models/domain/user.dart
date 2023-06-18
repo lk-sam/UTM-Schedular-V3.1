@@ -1,19 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class User {
+  final String? id;
   final String matricNo;
   final String fullname;
   final String IC;
-  final String description;
-  bool isSubscribed;
+  String? description;
+  bool? isSubscribed;
   DateTime? subscriptionDueDate;
 
   User({
+    this.id,
     required this.matricNo,
     required this.fullname,
     required this.IC,
-    required this.description,
-    required this.isSubscribed,
+    this.description,
+    this.isSubscribed,
     this.subscriptionDueDate,
   });
 
@@ -24,6 +27,5 @@ class User {
   String get getIC {
     return IC;
   }
+
 }
-
-

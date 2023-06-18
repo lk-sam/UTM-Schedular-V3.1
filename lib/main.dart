@@ -12,6 +12,7 @@ import 'package:utmschedular/screens/testing_course_page.dart';
 import 'package:utmschedular/screens/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -34,15 +35,16 @@ class MyApp extends StatelessWidget {
         routes: {
           calendarRoute: (context) => const CalendarPage(),
           timetableRoute: (context) => const ExampleTimetable(),
-          taskRoute: (context) => TaskOverviewPage(taskService: Provider.of<TaskService>(context, listen: false)),
+          taskRoute: (context) => TaskOverviewPage(
+              taskService: Provider.of<TaskService>(context, listen: false)),
           editCourseRoute: (context) => EditCoursePage(),
           courseListRoute: (context) => CourseScreen(),
+          loginRoute: (context) => LoginPage(),
         },
       ),
     );
   }
 }
-
 
 class MyBlankApp extends StatelessWidget {
   @override
