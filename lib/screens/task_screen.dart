@@ -4,6 +4,8 @@ import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:utmschedular/models/domain/task.dart';
 import 'package:utmschedular/screens/new_task_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart'; // New import
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:utmschedular/services/preference_service.dart';
 
 class TaskOverviewPage extends StatefulWidget {
   final TaskService taskService; // inject TaskService
@@ -86,45 +88,60 @@ class TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Task>>(
-      stream: taskService.getTasks("A20EC0224"),
-      builder: (context, snapshot) {
+    return FutureBuilder<String>(
+      future: getMatricNo(),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          List<Task> filteredTasks = [];
+          final matricNo = snapshot.data ?? '';
 
-          switch (filter) {
-            case TaskFilter.Overdue:
-              filteredTasks = snapshot.data!
-                  .where((task) => task.dueDateTime.isBefore(DateTime.now()))
-                  .toList();
-              break;
-            case TaskFilter.Today:
-              filteredTasks = snapshot.data!
-                  .where((task) =>
-                      task.dueDateTime.day == DateTime.now().day &&
-                      task.dueDateTime.month == DateTime.now().month &&
-                      task.dueDateTime.year == DateTime.now().year)
-                  .toList();
-              break;
-            case TaskFilter.Future:
-              filteredTasks = snapshot.data!
-                  .where((task) => task.dueDateTime.isAfter(DateTime.now()))
-                  .toList();
-              break;
-          }
+          return StreamBuilder<List<Task>>(
+            stream: taskService.getTasks(matricNo),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                List<Task> filteredTasks = [];
 
-          return ListView.builder(
-            itemCount: filteredTasks.length,
-            itemBuilder: (context, index) {
-              Task task = filteredTasks[index];
-              return ListTile(
-                title: Text(task.title),
-                subtitle: Text(task.category),
-              );
+                switch (filter) {
+                  case TaskFilter.Overdue:
+                    filteredTasks = snapshot.data!
+                        .where(
+                            (task) => task.dueDateTime.isBefore(DateTime.now()))
+                        .toList();
+                    break;
+                  case TaskFilter.Today:
+                    filteredTasks = snapshot.data!
+                        .where((task) =>
+                            task.dueDateTime.day == DateTime.now().day &&
+                            task.dueDateTime.month == DateTime.now().month &&
+                            task.dueDateTime.year == DateTime.now().year)
+                        .toList();
+                    break;
+                  case TaskFilter.Future:
+                    filteredTasks = snapshot.data!
+                        .where(
+                            (task) => task.dueDateTime.isAfter(DateTime.now()))
+                        .toList();
+                    break;
+                }
+
+                return ListView.builder(
+                  itemCount: filteredTasks.length,
+                  itemBuilder: (context, index) {
+                    Task task = filteredTasks[index];
+                    return ListTile(
+                      title: Text(task.title),
+                      subtitle: Text(task.category),
+                    );
+                  },
+                );
+              }
             },
           );
         }
