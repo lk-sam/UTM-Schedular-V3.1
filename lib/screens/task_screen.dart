@@ -76,27 +76,3 @@ class _HomePageState extends State<TaskOverviewPage> {
   }
 }
 
-
-
-
-
-                return ListView.builder(
-                  itemCount: filteredTasks.length,
-                  itemBuilder: (context, index) {
-                    Task task = filteredTasks[index];
-                    return ListTile(
-                      title: Text(task.title),
-                      subtitle: Text(task.category),
-                    );
-                  },
-                );
-              }
-            },
-          );
-        }
-      },
-    );
-  }
-}
-
-
