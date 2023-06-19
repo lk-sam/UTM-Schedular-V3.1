@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:utmschedular/constants/routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -54,7 +56,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                           leading: Icon(Icons.logout),
                           title: Text('Log Out'),
                           onTap: () {
-                            Navigator.pushNamed(context, loginRoute);
+                            logout(context);
                           },
                         ),
                       ],
@@ -147,3 +149,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     });
   }
 }
+
+  Future<void> logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('matricNo');
+    Navigator.pushReplacementNamed(context, '/');
+  }
+

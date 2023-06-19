@@ -3,7 +3,6 @@ import 'package:utmschedular/components/custom_appBar.dart';
 import 'package:utmschedular/components/custom_drawer.dart';
 import 'package:utmschedular/models/domain/class.dart';
 import 'package:utmschedular/models/domain/course.dart';
-
 import '../models/domain/timetable.dart';
 
 class CourseScreen extends StatelessWidget {
@@ -16,7 +15,7 @@ class CourseScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           children: [
             Icon(Icons.book),
             SizedBox(width: 16),

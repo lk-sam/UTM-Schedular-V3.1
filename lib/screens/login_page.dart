@@ -7,8 +7,6 @@ import 'package:utmschedular/constants/routes.dart';
 
 import '../models/DTO/userDTO.dart';
 
-
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -273,9 +271,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 prefs.setString('matricNo', matricNo); 
 
                                                 Navigator.pushNamed(
-                                                    context,
-                                                    taskRoute,
-                                                   );
+                                                  context,
+                                                  taskRoute,
+                                                );
                                               } else {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
