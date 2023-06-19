@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -40,7 +42,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ListTile(
                           leading: Icon(Icons.logout),
                           title: Text('Log Out'),
-                          onTap: () {},
+                          onTap: () {
+                            logout(context);
+                          },
                         ),
                       ],
                     ),
@@ -55,3 +59,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
+
+  Future<void> logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('matricNo');
+    Navigator.pushReplacementNamed(context, '/');
+  }

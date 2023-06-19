@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class User {
   final String matricNo;
   final String fullname;
@@ -23,3 +25,5 @@ class User {
     return IC;
   }
 }
+
+

@@ -2,12 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:utmschedular/screens/home_screen.dart';
 import 'package:utmschedular/screens/register_page.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:utmschedular/constants/routes.dart';
 
 import '../models/DTO/userDTO.dart';
-
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<UserDTO> userInfo = Future.value();
   String matricNo = ''; // Get matric no. from user
   String password = ''; // Get password from user
@@ -268,10 +267,13 @@ class _LoginPageState extends State<LoginPage> {
                                                         ))),
                                                   ),
                                                 );
+                                                SharedPreferences prefs = await _prefs;  // await the Future<SharedPreferences>
+                                                prefs.setString('matricNo', matricNo); 
+
                                                 Navigator.pushNamed(
-                                                    context,
-                                                    taskRoute,
-                                                   );
+                                                  context,
+                                                  taskRoute,
+                                                );
                                               } else {
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
