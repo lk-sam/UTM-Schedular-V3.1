@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserDTO {
   final String? id;
   final String? password;
+  final String? ic;
   final String fullName;
   final String loginName;
   final String? description;
@@ -11,6 +12,7 @@ class UserDTO {
   UserDTO(
       {this.id,
       this.password,
+      this.ic,
       required this.fullName,
       required this.loginName,
       this.description,
@@ -29,11 +31,11 @@ class UserDTO {
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return UserDTO(
-      id: document.id,
-      fullName: data["fullname"],
-      loginName: data["matric no"],
-      password: data["password"],
-    );
+        id: document.id,
+        fullName: data["Fullname"],
+        loginName: data["MatricNo"],
+        password: data["Password"],
+        ic: data["IC"]);
   }
 
   String getMatricNo() {
@@ -42,5 +44,9 @@ class UserDTO {
 
   String? getPassword() {
     return password;
+  }
+
+  String getFullName() {
+    return loginName;
   }
 }

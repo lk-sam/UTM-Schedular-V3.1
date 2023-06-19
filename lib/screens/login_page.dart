@@ -18,7 +18,9 @@ class _LoginPageState extends State<LoginPage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   late Future<UserDTO> userInfo = Future.value();
   String matricNo = ''; // Get matric no. from user
-  String password = ''; // Get password from user
+  String password = ''; // Get password from user;
+
+  var _isObscured;
 
   final users = FirebaseFirestore.instance;
 
@@ -26,10 +28,16 @@ class _LoginPageState extends State<LoginPage> {
   Future<UserDTO> getUserAuth(matricNo) async {
     final snapshot = await users
         .collection('User')
-        .where("matric no", isEqualTo: matricNo)
+        .where("MatricNo", isEqualTo: matricNo)
         .get();
     final userData = snapshot.docs.map((e) => UserDTO.fromSnapshot(e)).single;
     return userData;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = true;
   }
 
   @override
@@ -156,8 +164,21 @@ class _LoginPageState extends State<LoginPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              TextField(
+                                              TextFormField(
+                                                obscureText: _isObscured,
                                                 decoration: InputDecoration(
+                                                  suffixIcon: IconButton(
+                                                      icon: _isObscured
+                                                          ? const Icon(
+                                                              Icons.visibility)
+                                                          : const Icon(Icons
+                                                              .visibility_off),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _isObscured =
+                                                              !_isObscured;
+                                                        });
+                                                      }),
                                                   border: OutlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: Color(
@@ -267,8 +288,10 @@ class _LoginPageState extends State<LoginPage> {
                                                         ))),
                                                   ),
                                                 );
-                                                SharedPreferences prefs = await _prefs;  // await the Future<SharedPreferences>
-                                                prefs.setString('matricNo', matricNo); 
+                                                SharedPreferences prefs =
+                                                    await _prefs; // await the Future<SharedPreferences>
+                                                prefs.setString(
+                                                    'matricNo', matricNo);
 
                                                 Navigator.pushNamed(
                                                   context,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:utmschedular/models/DTO/userDTO.dart';
 import 'package:utmschedular/screens/login_page.dart';
 import 'package:utmschedular/models/domain/user.dart';
@@ -18,6 +19,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   late Future<String> JsonMatric = Future.value();
   late Future<String> JsonName = Future.value();
+  late Future<String> JsonRole = Future.value();
   String matricNo = ''; // Get matric no. from user
   String IC = ''; // Get IC from user
   String password = ''; // Get password from user
@@ -31,9 +33,14 @@ class _RegisterPageState extends State<RegisterPage> {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('User');
 
+  var _isObscured1;
+  var _isObscured2;
+
   @override
   void initState() {
     super.initState();
+    _isObscured1 = true;
+    _isObscured2 = true;
   }
 
   //Fetch student name based on the provided matric number and ic number
@@ -45,6 +52,12 @@ class _RegisterPageState extends State<RegisterPage> {
   // Fetch student matric no. based on the provided matric number and ic number
   Future<String> getStudentInfo(String matricNo, String ic) async {
     String matric = await ApiService.fetchMatricNo(matricNo, ic);
+    return matric;
+  }
+
+  // Fetch student role based on the provided matric number and ic number
+  Future<String> getStudentRole(String matricNo, String ic) async {
+    String matric = await ApiService.fetchRole(matricNo, ic);
     return matric;
   }
 
@@ -206,9 +219,22 @@ class _RegisterPageState extends State<RegisterPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              TextField(
+                                              TextFormField(
+                                                obscureText: _isObscured1,
                                                 controller: passwordController,
                                                 decoration: InputDecoration(
+                                                  suffixIcon: IconButton(
+                                                      icon: _isObscured1
+                                                          ? const Icon(
+                                                              Icons.visibility)
+                                                          : const Icon(Icons
+                                                              .visibility_off),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _isObscured1 =
+                                                              !_isObscured1;
+                                                        });
+                                                      }),
                                                   border: OutlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: Color(
@@ -244,10 +270,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              TextField(
+                                              TextFormField(
+                                                obscureText: _isObscured2,
                                                 controller:
                                                     confirmedPasswordController,
                                                 decoration: InputDecoration(
+                                                  suffixIcon: IconButton(
+                                                      icon: _isObscured2
+                                                          ? const Icon(
+                                                              Icons.visibility)
+                                                          : const Icon(Icons
+                                                              .visibility_off),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _isObscured2 =
+                                                              !_isObscured2;
+                                                        });
+                                                      }),
                                                   border: OutlineInputBorder(
                                                       borderSide: BorderSide(
                                                           color: Color(
@@ -282,46 +321,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                                   getStudentInfo(matricNo, IC);
                                               JsonName =
                                                   getStudentName(matricNo, IC);
+                                              JsonRole =
+                                                  getStudentRole(matricNo, IC);
                                             });
                                             String StringJsonMatric =
                                                 await JsonMatric;
                                             String StringJsonName =
                                                 await JsonName;
+                                            String StringJsonRole =
+                                                await JsonRole;
                                             print(StringJsonName);
-                                            // FutureBuilder<String>(
-                                            //   future: JsonMatric,
-                                            //   builder: (context, snapshot) {
-                                            //     if (snapshot.connectionState ==
-                                            //         ConnectionState.waiting) {
-                                            //       return CircularProgressIndicator();
-                                            //     } else if (snapshot.hasError) {
-                                            //       return Text(
-                                            //           'Error: ${snapshot.error}');
-                                            //     } else if (!snapshot.hasData) {
-                                            //       return Text('No data');
-                                            //     } else if (matricNo
-                                            //             .toString() ==
-                                            //         StringJsonMatric) {
-                                            //       Navigator.push(
-                                            //           context,
-                                            //           MaterialPageRoute(
-                                            //               builder: (context) =>
-                                            //                   const LoginPage()));
-                                            //       return SizedBox
-                                            //           .shrink(); // Add a return statement here
-                                            //     } else {
-                                            //       ScaffoldMessenger.of(context)
-                                            //           .showSnackBar(
-                                            //         const SnackBar(
-                                            //           content: Text(
-                                            //               "Invalid Matric No. or IC! Please try again."),
-                                            //         ),
-                                            //       );
-                                            //       return SizedBox
-                                            //           .shrink(); // Add a return statement here
-                                            //     }
-                                            //   },
-                                            // );
 
                                             // Checking all TextFields.
                                             if (matricNo == '' ||
@@ -365,9 +374,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                                   final String? password =
                                                       passwordController.text;
                                                   await users.add({
-                                                    "fullname": StringJsonName,
-                                                    "matric no": matric,
-                                                    "password": password
+                                                    "Fullname": StringJsonName,
+                                                    "MatricNo": matric,
+                                                    "Password": password,
+                                                    "Role": StringJsonRole,
+                                                    "IC": IC,
                                                   });
 
                                                   //clear the test fields
