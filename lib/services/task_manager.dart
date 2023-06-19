@@ -43,8 +43,6 @@ Future<List<Task>> getTasksOffline(String userId) async {
   // Sync tasks from Hive to Firebase
   Future<void> _syncTasks() async {
     try {
-      // This is a basic example. You might want to add more advanced
-      // conflict resolution, error handling, etc.
       final tasks = taskHiveService.getTasksFromHive('*'); // get all tasks from Hive
       for (var task in tasks) {
         await taskService.createTask(task);
