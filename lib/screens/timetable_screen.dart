@@ -7,96 +7,204 @@ import 'package:utmschedular/screens/testing_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/firebase_service.dart';
 
-class TimetablePage extends StatefulWidget {
-  const TimetablePage({super.key});
+class TimetableAutoFill extends StatefulWidget {
+  const TimetableAutoFill({super.key});
 
   @override
-  State<TimetablePage> createState() => _TimetablePageState();
+  State<TimetableAutoFill> createState() => _TimetableAutoFillState();
 }
 
-class _TimetablePageState extends State<TimetablePage> {
+class _TimetableAutoFillState extends State<TimetableAutoFill> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<TableRow> rows = [];
+  List<Container> column = [];
+  Widget createTable() {
+    for (int i = 0; i < 17; ++i) {
+      if (i != 0) {
+        rows.add(createTableColumn(i));
+      } else {
+        rows.add(createTableColumn(i));
+      }
+    }
+    return Table(children: rows);
+  }
+
+  TableRow createTableColumn(int i) {
+    List<String> day = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    for (int j = 0; j < 8; j++) {
+      if (i == 0) {
+        if (j == 0) {
+          column.add(
+            Container(),
+          );
+        } else {
+          column.add(
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  day[j - 1],
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      } else {
+        column.add(
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 1,
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(5.0),
+              child: Text(
+                'Hello Macaw',
+                style: TextStyle(
+                  fontSize: 12.0,
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    }
+    return TableRow(children: column);
+  }
 
   @override
   Widget build(BuildContext context) {
+    //createTable();
     return Scaffold(
       key: _scaffoldKey,
       appBar: CustomAppBar(title: "TimeTable", scaffoldKey: _scaffoldKey),
       drawer: CustomDrawer(),
-      body: TimetableContainer(timetables: timetables),
+      body: TimetableAutoContainer(),
     );
   }
 }
 
-class ExampleTimetable extends StatefulWidget {
-  const ExampleTimetable({Key? key}) : super(key: key);
+class TimetableAutoContainer extends StatelessWidget {
+  const TimetableAutoContainer({
+    Key? key,
+  }) : super(key: key);
 
-  @override
-  State<ExampleTimetable> createState() => _ExampleTimetableState();
-}
+  Widget createTable() {
+    List<TableRow> rows = [];
+    for (int i = 0; i < 18; ++i) {
+      if (i != 0) {
+        rows.add(createTableColumn(i));
+      } else {
+        rows.add(createTableColumn(i));
+      }
+    }
+    return Table(children: rows);
+  }
 
-class _ExampleTimetableState extends State<ExampleTimetable> {
-  // text fields' controllers
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
+  TableRow createTableColumn(int i) {
+    List<Container> column = [];
+    List<String> day = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    List<String> time = ["8:00","9:00","10:00","11:00","12:00","13:00","14:00",
+    "15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00",
+    "24:00"];
+    for (int j = 0; j < 8; j++) {
+      if (i == 0) {
+        if (j == 0) {
+          column.add(
+            Container(),
+          );
+        } else {
+          column.add(
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  day[j - 1],
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      } else {
+        if (j == 0) {
+          column.add(
+            Container(
+              width: 55.0,
+              height: 55.0,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  time[i - 1],
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          column.add(
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1,
+                ),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(5.0),
+                child: Text(
+                  'Hello Macaw',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
+    return TableRow(children: column);
+  }
 
-  final CollectionReference _productss =
-      FirebaseFirestore.instance.collection('products');
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(title: "TimeTable", scaffoldKey: _scaffoldKey),
-      // Using StreamBuilder to display all products from Firestore in real-time
-      drawer: CustomDrawer(),
-      body: StreamBuilder(
-        stream: _productss.snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.hasData) {
-            return ListView.builder(
-              itemCount: streamSnapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot documentSnapshot =
-                    streamSnapshot.data!.docs[index];
-                return Card(
-                  margin: const EdgeInsets.all(10),
-                  child: ListTile(
-                    title: Text(documentSnapshot['name']),
-                    subtitle: Text(documentSnapshot['price'].toString()),
-                    trailing: SizedBox(
-                      width: 100,
-                      child: Row(
-                        children: [
-                          // Press this button to edit a single product
-                          IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () async =>{await FirebaseAPI.createOrUpdate( _nameController, _priceController,context,_productss,documentSnapshot)}
-                          ),
-                          // This icon button is used to delete a single product
-                          IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () async =>{await FirebaseAPI.deleteProduct(documentSnapshot.id,_productss,context)})
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+      appBar: AppBar(
+        title: const Text('First Route'),
+        toolbarHeight: 0,
       ),
-      // Add new product
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => FirebaseAPI.createOrUpdate(_nameController, _priceController,context,_productss),
-        child: const Icon(Icons.add),
-      ),
+      body: Center(
+          child: Padding(
+        padding: EdgeInsets.all(24),
+        child: ListView(
+          children: [
+            createTable(),
+          ],
+        ),
+      )),
     );
   }
 }

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         home: const LoginPage(),
         routes: {
           calendarRoute: (context) => const CalendarPage(),
-          timetableRoute: (context) => const ExampleTimetable(),
+          timetableRoute: (context) => const TimetableAutoFill(),
           taskRoute: (context) => TaskOverviewPage(taskService: Provider.of<TaskService>(context, listen: false)),
           editCourseRoute: (context) => EditCoursePage(),
           courseListRoute: (context) => CourseScreen(),
