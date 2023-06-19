@@ -18,15 +18,15 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Firebase.initializeApp();
-  
+
   final prefs = await SharedPreferences.getInstance();
   final matricNo = prefs.getString('matricNo');
-  
+
   await Hive.initFlutter();
   Hive.registerAdapter(TaskAdapter());
-  
+
   runApp(
     Provider<TaskService>(
       create: (_) => TaskService(),
@@ -37,11 +37,10 @@ void main() async {
   Hive.close();
 }
 
-
 class MyApp extends StatelessWidget {
   final String? matricNo;
   const MyApp({this.matricNo});
-  
+
   @override
   Widget build(BuildContext context) {
     print(matricNo);

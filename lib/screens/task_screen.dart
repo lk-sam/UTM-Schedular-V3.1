@@ -49,7 +49,7 @@ class _HomePageState extends State<TaskOverviewPage> {
               count: 3,
               effect: ScrollingDotsEffect(
                 activeDotColor: Theme.of(context).primaryColor,
-                dotColor: Color(0xFFDADADA),
+                dotColor:  Color(0xFFDADADA),
                 dotHeight: 8,
                 dotWidth: 8,
               ),

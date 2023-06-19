@@ -15,7 +15,7 @@ class CourseScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           children: [
             Icon(Icons.book),
             SizedBox(width: 16),
