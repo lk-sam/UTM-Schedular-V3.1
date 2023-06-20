@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:utmschedular/constants/routes.dart';
 import 'package:utmschedular/models/domain/task.dart';
 import 'package:utmschedular/screens/calendar_screen.dart';
+import 'package:utmschedular/screens/change_pass_screen.dart';
 import 'package:utmschedular/screens/edit_course_page.dart';
 import 'package:utmschedular/screens/home_screen.dart';
+import 'package:utmschedular/screens/profile_screen.dart';
 import 'package:utmschedular/screens/task_screen.dart';
 import 'package:utmschedular/screens/timetable_screen.dart';
 import 'package:utmschedular/screens/testing_course_page.dart';
@@ -59,6 +61,7 @@ class MyApp extends StatelessWidget {
         taskRoute: (context) => TaskOverviewPage(taskService: taskService),
         editCourseRoute: (context) => EditCoursePage(),
         courseListRoute: (context) => CourseScreen(),
+        changePassRoute: (context) => ChangePasswordScreen(),
       },
     );
   }
