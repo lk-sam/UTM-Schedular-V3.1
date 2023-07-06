@@ -151,9 +151,22 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextField(
+                                                cursorColor: Color(0xff81163f),
                                                 controller: matricController,
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0xff81163f))),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 2,
+                                                        color:
+                                                            Color(0xff81163f)),
+                                                  ),
                                                 ),
                                                 onChanged: (value) {
                                                   setState(() {
@@ -186,8 +199,21 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextField(
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
+                                                cursorColor: Color(0xff81163f),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0xff81163f))),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 2,
+                                                        color:
+                                                            Color(0xff81163f)),
+                                                  ),
                                                 ),
                                                 onChanged: (value) {
                                                   setState(() {
@@ -220,6 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextFormField(
+                                                cursorColor: Color(0xff81163f),
                                                 obscureText: _isObscured1,
                                                 controller: passwordController,
                                                 decoration: InputDecoration(
@@ -235,10 +262,26 @@ class _RegisterPageState extends State<RegisterPage> {
                                                               !_isObscured1;
                                                         });
                                                       }),
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Color(
-                                                              0xff81163f))),
+                                                  suffixIconColor: MaterialStateColor
+                                                      .resolveWith((states) =>
+                                                          states.contains(
+                                                                  MaterialState
+                                                                      .focused)
+                                                              ? const Color(
+                                                                  0xff81163f)
+                                                              : Colors.grey),
+                                                  enabledBorder:
+                                                      const OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0xff81163f))),
+                                                  focusedBorder:
+                                                      const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 2,
+                                                        color:
+                                                            Color(0xff81163f)),
+                                                  ),
                                                 ),
                                                 onChanged: (value) {
                                                   setState(() {
@@ -263,14 +306,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                                   ))
                                             ])),
                                     Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 0),
                                         //Username
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextFormField(
+                                                cursorColor: Color(0xff81163f),
                                                 obscureText: _isObscured2,
                                                 controller:
                                                     confirmedPasswordController,
@@ -287,10 +331,26 @@ class _RegisterPageState extends State<RegisterPage> {
                                                               !_isObscured2;
                                                         });
                                                       }),
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Color(
-                                                              0xff81163f))),
+                                                  suffixIconColor: MaterialStateColor
+                                                      .resolveWith((states) =>
+                                                          states.contains(
+                                                                  MaterialState
+                                                                      .focused)
+                                                              ? const Color(
+                                                                  0xff81163f)
+                                                              : Colors.grey),
+                                                  enabledBorder:
+                                                      const OutlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: Color(
+                                                                  0xff81163f))),
+                                                  focusedBorder:
+                                                      const OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 2,
+                                                        color:
+                                                            Color(0xff81163f)),
+                                                  ),
                                                 ),
                                                 onChanged: (value) {
                                                   setState(() {
@@ -415,7 +475,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                                                           10))),
                                                           child: const Center(
                                                               child: Text(
-                                                            "Please login using the correct registered information...",
+                                                            "Register Successfully...",
                                                             style: TextStyle(
                                                               fontSize: 15,
                                                               color:

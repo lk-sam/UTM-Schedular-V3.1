@@ -6,3 +6,5 @@ const editCourseRoute = '/edit-course';
 const courseListRoute = '/course-list';
 const loginRoute = '/login';
 const registerRoute = '/register';
+const profileRoute = '/profile';
+const changePassRoute = '/change-pass';

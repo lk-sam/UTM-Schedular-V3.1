@@ -6,7 +6,7 @@ class UserDTO {
   final String? ic;
   final String fullName;
   final String loginName;
-  final String? description;
+  final String description;
   final String? sessionID;
 
   UserDTO(
@@ -15,7 +15,7 @@ class UserDTO {
       this.ic,
       required this.fullName,
       required this.loginName,
-      this.description,
+      required this.description,
       this.sessionID});
 
   factory UserDTO.fromJson(Map<String, dynamic> json) {
@@ -35,7 +35,8 @@ class UserDTO {
         fullName: data["Fullname"],
         loginName: data["MatricNo"],
         password: data["Password"],
-        ic: data["IC"]);
+        ic: data["IC"],
+        description: data["Role"]);
   }
 
   String getMatricNo() {
@@ -47,6 +48,10 @@ class UserDTO {
   }
 
   String getFullName() {
-    return loginName;
+    return fullName;
+  }
+
+  String getRole() {
+    return description;
   }
 }

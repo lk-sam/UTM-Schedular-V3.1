@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:utmschedular/constants/routes.dart';
 import 'package:utmschedular/models/domain/task.dart';
 import 'package:utmschedular/screens/calendar_screen.dart';
+import 'package:utmschedular/screens/change_pass_screen.dart';
 import 'package:utmschedular/screens/edit_course_page.dart';
 import 'package:utmschedular/screens/home_screen.dart';
+import 'package:utmschedular/screens/profile_screen.dart';
 import 'package:utmschedular/screens/task_screen.dart';
 import 'package:utmschedular/screens/timetable_screen.dart';
 import 'package:utmschedular/screens/testing_course_page.dart';
@@ -46,18 +48,21 @@ class MyApp extends StatelessWidget {
     print(matricNo);
     final taskService = Provider.of<TaskService>(context, listen: false);
     return MaterialApp(
-        title: 'UTM Scheduler',
-        theme: ThemeData(
-          primaryColor: const Color(0xFF81163F),
-        ),
-        home: matricNo == null ? LoginPage() : TaskOverviewPage(taskService: taskService),
-        routes: {
-          calendarRoute: (context) => const CalendarPage(),
-          timetableRoute: (context) => const TimetableAutoFill(),
-          taskRoute: (context) => TaskOverviewPage(taskService: taskService),
-          editCourseRoute: (context) => EditCoursePage(),
-          courseListRoute: (context) => CourseScreen(),
-        },
-      );
+      title: 'UTM Scheduler',
+      theme: ThemeData(
+        primaryColor: const Color(0xFF81163F),
+      ),
+      home: matricNo == null
+          ? LoginPage()
+          : TaskOverviewPage(taskService: taskService),
+      routes: {
+        calendarRoute: (context) => const CalendarPage(),
+        timetableRoute: (context) => const TimetableAutoFill(),
+        taskRoute: (context) => TaskOverviewPage(taskService: taskService),
+        editCourseRoute: (context) => EditCoursePage(),
+        courseListRoute: (context) => CourseScreen(),
+        changePassRoute: (context) => ChangePasswordScreen(),
+      },
+    );
   }
 }

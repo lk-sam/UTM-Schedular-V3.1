@@ -131,9 +131,20 @@ class _LoginPageState extends State<LoginPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextField(
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                ),
+                                                cursorColor: Color(0xff81163f),
+                                                decoration: const InputDecoration(
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Color(
+                                                                    0xff81163f))),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          width: 2,
+                                                          color: Color(
+                                                              0xff81163f)),
+                                                    )),
                                                 onChanged: (value) {
                                                   setState(() {
                                                     matricNo = value;
@@ -165,25 +176,41 @@ class _LoginPageState extends State<LoginPage> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               TextFormField(
+                                                cursorColor: Color(0xff81163f),
                                                 obscureText: _isObscured,
                                                 decoration: InputDecoration(
-                                                  suffixIcon: IconButton(
-                                                      icon: _isObscured
-                                                          ? const Icon(
-                                                              Icons.visibility)
-                                                          : const Icon(Icons
-                                                              .visibility_off),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _isObscured =
-                                                              !_isObscured;
-                                                        });
-                                                      }),
-                                                  border: OutlineInputBorder(
+                                                    suffixIcon: IconButton(
+                                                        icon: _isObscured
+                                                            ? const Icon(Icons
+                                                                .visibility)
+                                                            : const Icon(Icons
+                                                                .visibility_off),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            _isObscured =
+                                                                !_isObscured;
+                                                          });
+                                                        }),
+                                                    suffixIconColor: MaterialStateColor
+                                                        .resolveWith((states) =>
+                                                            states.contains(
+                                                                    MaterialState
+                                                                        .focused)
+                                                                ? const Color(
+                                                                    0xff81163f)
+                                                                : Colors.grey),
+                                                    enabledBorder:
+                                                        const OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: Color(
+                                                                    0xff81163f))),
+                                                    focusedBorder:
+                                                        const OutlineInputBorder(
                                                       borderSide: BorderSide(
+                                                          width: 2,
                                                           color: Color(
-                                                              0xff81163f))),
-                                                ),
+                                                              0xff81163f)),
+                                                    )),
                                                 onChanged: (value) {
                                                   setState(() {
                                                     password = value;
