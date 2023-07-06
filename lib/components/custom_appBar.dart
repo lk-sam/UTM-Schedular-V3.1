@@ -95,5 +95,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 Future<void> logout(BuildContext context) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove('matricNo');
+  print('logout');
   Navigator.pushReplacementNamed(context, '/');
 }

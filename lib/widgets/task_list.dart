@@ -57,9 +57,11 @@ class TasksList extends StatelessWidget {
                         .toList();
                     break;
                 }
-
-                filteredTasks =
-                    filteredTasks.where((task) => !task.isCompleted).toList();
+                //sort the task by iscompleted, iscompleted false will be on top
+                filteredTasks.sort((a, b) => a.isCompleted
+                    .toString()
+                    .compareTo(b.isCompleted.toString()));
+                  
 
                 return Padding(
                   padding: EdgeInsets.all(8.0),
