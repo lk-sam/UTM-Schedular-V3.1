@@ -13,7 +13,8 @@ class TaskCard extends StatefulWidget {
   _TaskCardState createState() => _TaskCardState();
 }
 
-class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin {
+class _TaskCardState extends State<TaskCard>
+    with SingleTickerProviderStateMixin {
   bool _isPressed = false;
 
   @override
@@ -31,29 +32,47 @@ class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
-         transform: (_isPressed) ? (Matrix4.identity()..scale(0.95)) : Matrix4.identity(),
+        transform:
+            _isPressed ? (Matrix4.identity()..scale(0.95)) : Matrix4.identity(),
         child: Card(
           elevation: 4,
           child: ListTile(
-            leading: IconButton(
-              icon: Icon(widget.task.isCompleted ? Icons.check_circle_outline : Icons.circle_outlined),
+            title: Text(widget.task.title),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.task.category),
+                SizedBox(height: 2), // Add some vertical space
+                Text(widget.task.dueDateTime.toString()),
+              ],
+            ),
+            trailing: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: widget.task.isCompleted ? Colors.green : Colors.white,
+                onPrimary:
+                    widget.task.isCompleted ? Colors.white : Colors.black,
+              ),
               onPressed: () {
                 widget.taskService.toggleTaskCompletion(widget.task);
               },
+              child: Text(
+                widget.task.isCompleted ? 'Done' : 'Mark As Done',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            title: Text(widget.task.title),
-            subtitle: Text(widget.task.category),
-            trailing: Text(widget.task.dueDateTime.toString()),
             onTap: () {
               showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) {
-                    return FractionallySizedBox(
-                      heightFactor: 2 / 3,
-                      child: TaskOverviewPage(task: widget.task),
-                    );
-                  });
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return FractionallySizedBox(
+                    heightFactor: 2 / 3,
+                    child: TaskOverviewPage(task: widget.task),
+                  );
+                },
+              );
             },
             onLongPress: () {
               showDialog(
@@ -66,20 +85,29 @@ class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin
                         child: Text('Edit'),
                         onPressed: () {
                           Navigator.pop(context);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => EditTaskPage(task: widget.task, taskService: widget.taskService)));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditTaskPage(
+                                task: widget.task,
+                                taskService: widget.taskService,
+                              ),
+                            ),
+                          );
                         },
                       ),
                       SimpleDialogOption(
                         child: Text('Delete'),
                         onPressed: () {
                           Navigator.pop(context);
-                          //confirmation
+                          // Confirmation
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
                                 title: Text('Delete task'),
-                                content: Text('Are you sure you want to delete this task?'),
+                                content: Text(
+                                    'Are you sure you want to delete this task?'),
                                 actions: [
                                   TextButton(
                                     child: Text('Cancel'),
@@ -91,7 +119,8 @@ class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin
                                     child: Text('Delete'),
                                     onPressed: () {
                                       Navigator.pop(context);
-                                      widget.taskService.deleteTask(widget.task);
+                                      widget.taskService
+                                          .deleteTask(widget.task);
                                     },
                                   ),
                                 ],
@@ -100,13 +129,15 @@ class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin
                           );
                         },
                       ),
-                      SimpleDialogOption(
-                        child: Text('Complete'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          widget.taskService.toggleTaskCompletion(widget.task);
-                        },
-                      ),
+                      if (!widget.task.isCompleted)
+                        SimpleDialogOption(
+                          child: Text('Mark As Done'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            widget.taskService
+                                .toggleTaskCompletion(widget.task);
+                          },
+                        ),
                     ],
                   );
                 },
@@ -118,4 +149,3 @@ class _TaskCardState extends State<TaskCard> with SingleTickerProviderStateMixin
     );
   }
 }
-
